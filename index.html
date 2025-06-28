@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>付费变现计算器 - 收入目标拆解工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 15px 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 20px;
+        }
+
+        .nav-brand {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            color: #4a5568;
+        }
+
+        .nav-links a.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .nav-links a:hover:not(.active) {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        .calculator {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .input-section, .results-section {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .target-input {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .target-input::placeholder {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-label {
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        .result-value {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 1.1em;
+        }
+
+        .highlight {
+            color: #667eea !important;
+            font-size: 1.2em !important;
+        }
+
+        .gpts-comparison {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .gpts-comparison h3 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .gpts-ratio {
+            font-size: 2em;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        .formula-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #2d3748;
+            color: white;
+            border-radius: 15px;
+        }
+
+        .formula {
+            font-family: 'Courier New', monospace;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+            .calculator {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+        }
+
+        .auto-calculate {
+            margin-top: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .auto-calculate:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-brand">💰 收入计算器</div>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">💳 付费变现</a></li>
+            <li><a href="ad-monetization.html">📺 广告变现</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>💳 付费变现计算器</h1>
+        
+        <div class="calculator">
+            <div class="input-section">
+                <h2 class="section-title">🎯 设置目标与变量</h2>
+                
+                <div class="form-group">
+                    <label for="monthlyRevenue">月收入目标 (美元)</label>
+                    <input type="number" id="monthlyRevenue" class="target-input" placeholder="10000" value="10000">
+                </div>
+
+                <button class="auto-calculate" onclick="autoCalculate()">🚀 自动拆解变量</button>
+
+                <div class="form-group">
+                    <label for="clickRate">点击率 (%)</label>
+                    <input type="number" id="clickRate" step="0.1" value="5" min="0" max="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="conversionRate">转化率 (%)</label>
+                    <input type="number" id="conversionRate" step="0.1" value="1" min="0" max="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="avgOrderValue">客单价 (美元)</label>
+                    <input type="number" id="avgOrderValue" value="20" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="googleTrafficPercent">谷歌流量占比 (%)</label>
+                    <input type="number" id="googleTrafficPercent" value="50" min="0" max="100">
+                </div>
+            </div>
+
+            <div class="results-section">
+                <h2 class="section-title">📊 计算结果</h2>
+                
+                <div class="result-item">
+                    <span class="result-label">每日订单数</span>
+                    <span class="result-value" id="dailyOrders">-</span>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">每日UV需求</span>
+                    <span class="result-value" id="dailyUV">-</span>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">谷歌UV需求</span>
+                    <span class="result-value" id="googleUV">-</span>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">每日搜索量需求</span>
+                    <span class="result-value highlight" id="dailySearchVolume">-</span>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">月搜索量需求</span>
+                    <span class="result-value highlight" id="monthlySearchVolume">-</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="gpts-comparison">
+            <h3>🔥 与GPTs关键词对比</h3>
+            <div>GPTs日搜索量: 9,000</div>
+            <div class="gpts-ratio" id="gptsRatio">-</div>
+            <div id="gptsComparison">需要找到搜索量为GPTs <span id="multiplier">-</span> 倍的关键词</div>
+        </div>
+
+        <div class="formula-section">
+            <h3>📝 核心公式</h3>
+            <div class="formula">
+                月收入 = 日搜索量 × 点击率 × 转化率 × 客单价 × 30天
+            </div>
+            <div class="formula">
+                日搜索量需求 = 月收入目标 ÷ (点击率 × 转化率 × 客单价 × 30)
+            </div>
+            <div class="formula">
+                关键词倍数 = 目标日搜索量 ÷ GPTs日搜索量(9000)
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // GPTs基准搜索量
+        const GPTS_DAILY_SEARCH = 9000;
+
+        function calculate() {
+            const monthlyRevenue = parseFloat(document.getElementById('monthlyRevenue').value) || 0;
+            const clickRate = parseFloat(document.getElementById('clickRate').value) / 100 || 0;
+            const conversionRate = parseFloat(document.getElementById('conversionRate').value) / 100 || 0;
+            const avgOrderValue = parseFloat(document.getElementById('avgOrderValue').value) || 0;
+            const googleTrafficPercent = parseFloat(document.getElementById('googleTrafficPercent').value) / 100 || 0;
+
+            // 计算每日订单数
+            const dailyOrders = monthlyRevenue / (avgOrderValue * 30);
+            
+            // 计算每日UV需求
+            const dailyUV = dailyOrders / conversionRate;
+            
+            // 计算谷歌UV需求
+            const googleUV = dailyUV * googleTrafficPercent;
+            
+            // 计算每日搜索量需求
+            const dailySearchVolume = googleUV / clickRate;
+            
+            // 计算月搜索量需求
+            const monthlySearchVolume = dailySearchVolume * 30;
+            
+            // 计算与GPTs的倍数关系
+            const gptsMultiplier = dailySearchVolume / GPTS_DAILY_SEARCH;
+
+            // 更新显示
+            document.getElementById('dailyOrders').textContent = Math.round(dailyOrders);
+            document.getElementById('dailyUV').textContent = Math.round(dailyUV).toLocaleString();
+            document.getElementById('googleUV').textContent = Math.round(googleUV).toLocaleString();
+            document.getElementById('dailySearchVolume').textContent = Math.round(dailySearchVolume).toLocaleString();
+            document.getElementById('monthlySearchVolume').textContent = Math.round(monthlySearchVolume).toLocaleString();
+            
+            document.getElementById('gptsRatio').textContent = gptsMultiplier.toFixed(1) + 'x';
+            document.getElementById('multiplier').textContent = gptsMultiplier.toFixed(1);
+        }
+
+        function autoCalculate() {
+            // 使用默认的合理变量值
+            document.getElementById('clickRate').value = '5';
+            document.getElementById('conversionRate').value = '1';
+            document.getElementById('avgOrderValue').value = '20';
+            document.getElementById('googleTrafficPercent').value = '50';
+            
+            calculate();
+        }
+
+        // 添加事件监听器
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        // 初始计算
+        calculate();
+    </script>
+</body>
+</html>
