@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://how-to-earn-1million.helloai001.com/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Disallow specific paths if needed
+# Disallow: /private/
+# Disallow: /admin/
+
+# Allow important resources
+Allow: /index.html
+Allow: /ad-monetization.html
+Allow: /*.css
+Allow: /*.js
+Allow: /*.jpg
+Allow: /*.png
+Allow: /*.gif
+Allow: /*.svg
