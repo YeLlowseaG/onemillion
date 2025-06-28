@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://how-to-earn-1million.helloai001.com/sitemap.xml
+Sitemap: https://how-to-earn-10000-dollars.com/sitemap.xml
 
 # Crawl-delay
 Crawl-delay: 1
