@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://how-to-earn-10000-dollars.com/sitemap.xml
+Sitemap: https://aiwebcalculator.org/sitemap.xml
 
 # Crawl-delay
 Crawl-delay: 1
