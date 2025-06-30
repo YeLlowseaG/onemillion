@@ -289,16 +289,38 @@
             }
 
             .navbar {
-                flex-direction: column;
-                gap: 15px;
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 10px;
                 width: calc(100% - 20px);
                 padding: 12px 20px;
             }
 
             .nav-links {
-                flex-direction: column;
-                text-align: center;
-                gap: 10px;
+                flex-direction: row;
+                gap: 8px;
+            }
+
+            .nav-links a {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+
+            .nav-brand {
+                font-size: 1.2em;
+            }
+
+            .coffee-text {
+                display: none !important;
+            }
+            
+            .coffee-icon {
+                display: inline !important;
+            }
+            
+            .coffee-nav-btn {
+                padding: 6px 10px !important;
+                min-width: 35px !important;
             }
 
             .time-period-section {
@@ -354,7 +376,7 @@
                 <li><a href="index.html">💳 付费变现</a></li>
                 <li><a href="ad-monetization.html" class="active">📺 广告变现</a></li>
             </ul>
-            <button onclick="openPaymentModal()" style="
+            <button onclick="openPaymentModal()" class="coffee-nav-btn" style="
                 background: linear-gradient(135deg, #ed8936, #dd6b20);
                 color: white;
                 border: none;
@@ -366,7 +388,10 @@
                 box-shadow: 0 2px 8px rgba(237, 137, 54, 0.3);
                 transition: all 0.3s ease;
                 white-space: nowrap;
-            " onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">☕ 咖啡</button>
+            " onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+                <span class="coffee-text">☕ 咖啡</span>
+                <span class="coffee-icon" style="display: none;">☕</span>
+            </button>
         </div>
     </nav>
 
@@ -385,7 +410,20 @@
                     <input type="number" id="targetRevenue" class="target-input" placeholder="1000" value="1000">
                 </div>
 
-                <button class="auto-calculate" onclick="autoCalculate()">🚀 自动拆解变量</button>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="auto-calculate" onclick="autoCalculate()" style="flex: 1; margin-top: 0;">🚀 自动拆解变量</button>
+                    <button class="reset-btn" onclick="resetCalculator()" style="
+                        background: #e2e8f0;
+                        color: #4a5568;
+                        border: none;
+                        padding: 15px 20px;
+                        border-radius: 10px;
+                        font-size: 16px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    " onmouseover="this.style.background='#cbd5e0'" onmouseout="this.style.background='#e2e8f0'">🔄 重置</button>
+                </div>
 
                 <div class="form-group">
                     <label for="rpm">RPM - 每千次访问收入 (美元)</label>
@@ -542,18 +580,29 @@
             // 与GPTs的对比（基于30天）
             const gptsMultiplier = dailyResults[30].dailyImpressions / GPTS_DAILY_SEARCH;
 
+            // 数值格式化函数
+            function formatNumber(num) {
+                if (num >= 1000000) {
+                    return (num / 1000000).toFixed(1) + 'M';
+                } else if (num >= 1000) {
+                    return (num / 1000).toFixed(1) + 'K';
+                } else {
+                    return Math.round(num).toLocaleString();
+                }
+            }
+
             // 更新基本结果
-            document.getElementById('totalPV').textContent = Math.round(totalPV).toLocaleString();
-            document.getElementById('totalUV').textContent = Math.round(totalUV).toLocaleString();
-            document.getElementById('googleUV').textContent = Math.round(googleUV).toLocaleString();
-            document.getElementById('searchImpressions').textContent = Math.round(searchImpressions).toLocaleString();
+            document.getElementById('totalPV').textContent = formatNumber(totalPV);
+            document.getElementById('totalUV').textContent = formatNumber(totalUV);
+            document.getElementById('googleUV').textContent = formatNumber(googleUV);
+            document.getElementById('searchImpressions').textContent = formatNumber(searchImpressions);
 
             // 更新时间周期结果
             periods.forEach(days => {
                 const suffix = days.toString();
-                document.getElementById('dailyUV' + suffix).textContent = Math.round(dailyResults[days].dailyUV).toLocaleString();
-                document.getElementById('dailyGoogleUV' + suffix).textContent = Math.round(dailyResults[days].dailyGoogleUV).toLocaleString();
-                document.getElementById('dailyImpressions' + suffix).textContent = Math.round(dailyResults[days].dailyImpressions).toLocaleString();
+                document.getElementById('dailyUV' + suffix).textContent = formatNumber(dailyResults[days].dailyUV);
+                document.getElementById('dailyGoogleUV' + suffix).textContent = formatNumber(dailyResults[days].dailyGoogleUV);
+                document.getElementById('dailyImpressions' + suffix).textContent = formatNumber(dailyResults[days].dailyImpressions);
             });
 
             // 更新GPTs对比
@@ -563,6 +612,17 @@
 
         function autoCalculate() {
             // 使用默认的合理变量值
+            document.getElementById('rpm').value = '3.33';
+            document.getElementById('pagesPerUser').value = '2.5';
+            document.getElementById('clickRate').value = '5';
+            document.getElementById('googleTrafficPercent').value = '50';
+            
+            calculate();
+        }
+
+        function resetCalculator() {
+            // 重置所有输入框为默认值
+            document.getElementById('targetRevenue').value = '1000';
             document.getElementById('rpm').value = '3.33';
             document.getElementById('pagesPerUser').value = '2.5';
             document.getElementById('clickRate').value = '5';

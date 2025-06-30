@@ -269,16 +269,38 @@
             }
 
             .navbar {
-                flex-direction: column;
-                gap: 15px;
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 10px;
                 width: calc(100% - 20px);
                 padding: 12px 20px;
             }
 
             .nav-links {
-                flex-direction: column;
-                text-align: center;
-                gap: 10px;
+                flex-direction: row;
+                gap: 8px;
+            }
+
+            .nav-links a {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+
+            .nav-brand {
+                font-size: 1.2em;
+            }
+
+            .coffee-text {
+                display: none !important;
+            }
+            
+            .coffee-icon {
+                display: inline !important;
+            }
+            
+            .coffee-nav-btn {
+                padding: 6px 10px !important;
+                min-width: 35px !important;
             }
         }
 
@@ -361,7 +383,7 @@
                 <li><a href="index.html" class="active">💳 付费变现</a></li>
                 <li><a href="ad-monetization.html">📺 广告变现</a></li>
             </ul>
-            <button onclick="openPaymentModal()" style="
+            <button onclick="openPaymentModal()" class="coffee-nav-btn" style="
                 background: linear-gradient(135deg, #ed8936, #dd6b20);
                 color: white;
                 border: none;
@@ -373,7 +395,10 @@
                 box-shadow: 0 2px 8px rgba(237, 137, 54, 0.3);
                 transition: all 0.3s ease;
                 white-space: nowrap;
-            " onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">☕ 咖啡</button>
+            " onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+                <span class="coffee-text">☕ 咖啡</span>
+                <span class="coffee-icon" style="display: none;">☕</span>
+            </button>
         </div>
     </nav>
 
@@ -392,7 +417,20 @@
                     <input type="number" id="monthlyRevenue" class="target-input" placeholder="10000" value="10000">
                 </div>
 
-                <button class="auto-calculate" onclick="autoCalculate()">🚀 自动拆解变量</button>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="auto-calculate" onclick="autoCalculate()" style="flex: 1; margin-top: 0;">🚀 自动拆解变量</button>
+                    <button class="reset-btn" onclick="resetCalculator()" style="
+                        background: #e2e8f0;
+                        color: #4a5568;
+                        border: none;
+                        padding: 15px 20px;
+                        border-radius: 10px;
+                        font-size: 16px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    " onmouseover="this.style.background='#cbd5e0'" onmouseout="this.style.background='#e2e8f0'">🔄 重置</button>
+                </div>
 
                 <div class="form-group">
                     <label for="clickRate">点击率 (%)</label>
@@ -495,12 +533,23 @@
             // 计算与GPTs的倍数关系
             const gptsMultiplier = dailySearchVolume / GPTS_DAILY_SEARCH;
 
+            // 数值格式化函数
+            function formatNumber(num) {
+                if (num >= 1000000) {
+                    return (num / 1000000).toFixed(1) + 'M';
+                } else if (num >= 1000) {
+                    return (num / 1000).toFixed(1) + 'K';
+                } else {
+                    return Math.round(num).toLocaleString();
+                }
+            }
+
             // 更新显示
             document.getElementById('dailyOrders').textContent = Math.round(dailyOrders);
-            document.getElementById('dailyUV').textContent = Math.round(dailyUV).toLocaleString();
-            document.getElementById('googleUV').textContent = Math.round(googleUV).toLocaleString();
-            document.getElementById('dailySearchVolume').textContent = Math.round(dailySearchVolume).toLocaleString();
-            document.getElementById('monthlySearchVolume').textContent = Math.round(monthlySearchVolume).toLocaleString();
+            document.getElementById('dailyUV').textContent = formatNumber(dailyUV);
+            document.getElementById('googleUV').textContent = formatNumber(googleUV);
+            document.getElementById('dailySearchVolume').textContent = formatNumber(dailySearchVolume);
+            document.getElementById('monthlySearchVolume').textContent = formatNumber(monthlySearchVolume);
             
             document.getElementById('gptsRatio').textContent = gptsMultiplier.toFixed(1) + 'x';
             document.getElementById('multiplier').textContent = gptsMultiplier.toFixed(1);
@@ -508,6 +557,17 @@
 
         function autoCalculate() {
             // 使用默认的合理变量值
+            document.getElementById('clickRate').value = '5';
+            document.getElementById('conversionRate').value = '1';
+            document.getElementById('avgOrderValue').value = '20';
+            document.getElementById('googleTrafficPercent').value = '50';
+            
+            calculate();
+        }
+
+        function resetCalculator() {
+            // 重置所有输入框为默认值
+            document.getElementById('monthlyRevenue').value = '10000';
             document.getElementById('clickRate').value = '5';
             document.getElementById('conversionRate').value = '1';
             document.getElementById('avgOrderValue').value = '20';
