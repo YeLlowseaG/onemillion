@@ -349,10 +349,25 @@
     <!-- 导航栏 -->
     <nav class="navbar">
         <div class="nav-brand">💰 出海赚钱计算器</div>
-        <ul class="nav-links">
-            <li><a href="index.html">💳 付费变现</a></li>
-            <li><a href="ad-monetization.html" class="active">📺 广告变现</a></li>
-        </ul>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <ul class="nav-links">
+                <li><a href="index.html">💳 付费变现</a></li>
+                <li><a href="ad-monetization.html" class="active">📺 广告变现</a></li>
+            </ul>
+            <button onclick="openPaymentModal()" style="
+                background: linear-gradient(135deg, #ed8936, #dd6b20);
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                box-shadow: 0 2px 8px rgba(237, 137, 54, 0.3);
+                transition: all 0.3s ease;
+                white-space: nowrap;
+            " onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">☕ 咖啡</button>
+        </div>
     </nav>
 
     <div class="container">
@@ -621,7 +636,7 @@
 
     <!-- 打赏区域 -->
     <div style="margin: 20px auto; max-width: 1200px; text-align: center;">
-        <button id="coffeeBtn" onclick="openPaymentModal()" style="
+        <button onclick="openPaymentModal()" style="
             background: linear-gradient(135deg, #ed8936, #dd6b20);
             color: white;
             border: none;
